@@ -1,0 +1,27 @@
+{
+  "name": "chrome-draw",
+  "version": "0.1.0",
+  "description": "Chrome + Leap = Draw",
+  "main": "javascripts/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/leapmotion/chrome-draw.git"
+  },
+  "author": "Peter & E",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/leapmotion/chrome-draw/issues"
+  },
+  "homepage": "https://github.com/leapmotion/chrome-draw",
+  "devDependencies": {
+    "coffee-script": "^1.7.1",
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.7.1",
+    "grunt-contrib-sass": "~0.7.3",
+    "grunt-contrib-watch": "~0.6.1",
+    "load-grunt-tasks": "~0.4.0"
+  }
+}
