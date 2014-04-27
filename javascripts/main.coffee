@@ -8,6 +8,8 @@ controller
   .use('riggedHand', {})
   .on 'hand', (hand)->
 
+    return if hand.pinchStrength < 0.5
+
     # set up rigged hand:
     handMesh = hand.data('riggedHand.mesh')
 

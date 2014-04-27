@@ -74,6 +74,9 @@
 
   controller.connect().use('riggedHand', {}).on('hand', function(hand) {
     var handMesh, pen, screenPosition;
+    if (hand.pinchStrength < 0.5) {
+      return;
+    }
     handMesh = hand.data('riggedHand.mesh');
     screenPosition = handMesh.screenPosition(hand.indexFinger.tipPosition, controller.plugins.riggedHand.camera);
     pen = hand.data('pen');
