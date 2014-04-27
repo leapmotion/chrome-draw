@@ -11,7 +11,13 @@ controller
 
 
 canvas = document.getElementById("canvas")
+#canvas.width(($(window).width()).height($(window).height());
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+
 
 Draw.context = canvas.getContext("2d")
 
-Draw.place(10,10, 25 * TO_RAD)
+Draw.place(100,100, 0 * TO_RAD)
+Draw.place(110,100, 10 * TO_RAD)
+Draw.stroke(260,100, -5 * TO_RAD)
