@@ -54,7 +54,8 @@ getPen = (hand)->
   Leap.vec3.sub(angle, hand.indexFinger.tipPosition, hand.thumb.tipPosition)
   Leap.vec3.normalize(angle, angle)
 
-  document.getElementById('out').innerHTML = (Math.tan(angle[0], angle[1]) * TO_DEG).toPrecision(2) + '&#176;'
+#  document.getElementById('out').innerHTML = (Math.tan(angle[0], angle[1]) * TO_DEG).toPrecision(2) + '&#176;'
+  document.getElementById('out').innerHTML = hand.pinchStrength
 
 
   pen.setPosition(
@@ -62,6 +63,8 @@ getPen = (hand)->
     window.innerHeight - screenPosition.y,
     hand.roll()
   )
+
+  pen.setColor("rgba(255,0,0,#{hand.pinchStrength})")
 
   return pen
 

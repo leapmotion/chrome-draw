@@ -5,6 +5,7 @@ class window.Pen
     @context = options.context
     @cursorContext = options.cursorContext
     @previewMode = false
+    @contexts = [options.context, options.cursorContext]
 
     # a rectangle
     @tip = {
@@ -23,6 +24,10 @@ class window.Pen
     @x = x
     @y = y
     @rotation = rotation
+
+  setColor: (colorString)->
+    @contexts.map (context)->
+      context.strokeStyle = context.fillStyle = colorString
 
   hasPreviousPlace: ->
     @lastPlace.x1 && @lastPlace.x2 && @lastPlace.y1 && @lastPlace.y2
