@@ -49,7 +49,19 @@ getPen = (hand)->
       )
     )
 
-  pen.setPosition(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll())
+  # weird, angle between thumb and indexFinger doesn't seem to work.
+  angle = Leap.vec3.create()
+  Leap.vec3.sub(angle, hand.indexFinger.tipPosition, hand.thumb.tipPosition)
+  Leap.vec3.normalize(angle, angle)
+
+  document.getElementById('out').innerHTML = (Math.tan(angle[0], angle[1]) * TO_DEG).toPrecision(2) + '&#176;'
+
+
+  pen.setPosition(
+    screenPosition.x,
+    window.innerHeight - screenPosition.y,
+    hand.roll()
+  )
 
   return pen
 

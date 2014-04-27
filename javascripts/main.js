@@ -110,7 +110,7 @@
   });
 
   getPen = function(hand) {
-    var handMesh, pen, screenPosition;
+    var angle, handMesh, pen, screenPosition;
     handMesh = hand.data('riggedHand.mesh');
     screenPosition = handMesh.screenPosition(hand.indexFinger.tipPosition, controller.plugins.riggedHand.camera);
     pen = hand.data('pen');
@@ -120,6 +120,10 @@
         cursorContext: cursorContext
       }));
     }
+    angle = Leap.vec3.create();
+    Leap.vec3.sub(angle, hand.indexFinger.tipPosition, hand.thumb.tipPosition);
+    Leap.vec3.normalize(angle, angle);
+    document.getElementById('out').innerHTML = (Math.tan(angle[0], angle[1]) * TO_DEG).toPrecision(2) + '&#176;';
     pen.setPosition(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll());
     return pen;
   };
