@@ -1,5 +1,5 @@
 /*    
- * LeapJS-Plugins  - v0.1.4.1 - 2014-04-26    
+ * LeapJS-Plugins  - v0.1.4 - 2014-04-27    
  * http://github.com/leapmotion/leapjs-plugins/    
  *    
  * Copyright 2014 LeapMotion, Inc    
@@ -91,23 +91,26 @@ Each event also includes the hand object, which will be invalid for the handLost
     var dataMethod, frameObjectData;
     frameObjectData = {};
     dataMethod = function(hashOrKey, value) {
-      var key, _name, _results;
-      frameObjectData[_name = this.id] || (frameObjectData[_name] = []);
-      if (value) {
-        return frameObjectData[this.id][hashOrKey] = value;
+      var key, objectData, _name;
+      objectData = frameObjectData[_name = this.id] || (frameObjectData[_name] = []);
+      if (value && (value["default"] === void 0)) {
+        return objectData[hashOrKey] = value;
       } else if (toString.call(hashOrKey) === '[object String]') {
-        return frameObjectData[this.id][hashOrKey];
+        if (!objectData[hashOrKey] && (value && value["default"])) {
+          return objectData[hashOrKey] = value["default"];
+        } else {
+          return objectData[hashOrKey];
+        }
       } else {
-        _results = [];
         for (key in hashOrKey) {
           value = hashOrKey[key];
           if (value === void 0) {
-            _results.push(delete frameObjectData[this.id][key]);
+            delete objectData[key];
           } else {
-            _results.push(frameObjectData[this.id][key] = value);
+            objectData[key] = value;
           }
         }
-        return _results;
+        return hashOrKey;
       }
     };
     return {
@@ -160,6 +163,11 @@ Each event also includes the hand object, which will be invalid for the handLost
   }
 
 }).call(this);
+
+
+
+
+
 
 
 

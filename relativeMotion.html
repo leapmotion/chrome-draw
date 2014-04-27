@@ -1,0 +1,54 @@
+<html>
+<head>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script src="javascripts/lib/leap-0.6.0-beta2.min.js"></script>
+  <script src="javascripts/lib/leap-plugins-0.1.4-data-defaults.js"></script>
+  <script src="javascripts/lib/leap.rigged-hand-0.1.0.js"></script>
+  <script src="javascripts/leap.relativeMotion.js"></script>
+</head>
+<script>
+
+  window.hand = null;
+
+  window.recalibrate = function(){
+    console.log('recalibrate');
+    hand.recalibrate();
+  };
+
+  Leap.loop({
+
+    hand: function(hand){
+      window.hand = hand;
+
+      var position = hand.relativePosition();
+      // position is a Float32Array, not a regular Javascript Array
+      // cannot use map or join :-(
+
+      document.getElementById('out').innerHTML = '';
+      for (var i = 0; i < 3; i++){
+        document.getElementById('out').innerHTML += "<br/>" + Math.round(position[i]);
+      }
+    }
+
+  })
+    .use('relativeMotion');
+
+  setTimeout(recalibrate, 1500);
+
+</script>
+
+<style>
+  body{
+    font-family: "Helvetica";
+    font-size: 2em;
+  }
+</style>
+
+<body>
+
+<button onclick="recalibrate();">Recalibrate</button>
+
+<div id="out"></div>
+
+</body>
+</html>
