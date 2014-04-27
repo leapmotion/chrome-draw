@@ -1,31 +1,32 @@
 # simulate caligraphy
-class window.Draw
+class window.Pen
 
-  @context: null
+  constructor: (options = {})->
+    @context = options.context
 
-  # a rectangle
-  @brush: {
-    width: 10
-    height: 40
-  }
+    # a rectangle
+    @tip = {
+      width: 10
+      height: 40
+    }
 
-  @lastPlace: {
-    x1: null,
-    y1: null
-    x2: null,
-    y2: null
-  }
+    @lastPlace = {
+      x1: null
+      y1: null
+      x2: null
+      y2: null
+    }
 
-  @hasPreviousPlace: ->
+  hasPreviousPlace: ->
     @lastPlace.x1 && @lastPlace.x2 && @lastPlace.y1 && @lastPlace.y2
 
   # expects rotation in radians
-  @place: (x, y, rotation)->
+  place: (x, y, rotation)->
     @context.beginPath()
     @context.moveTo(x, y)
 
-    x2 = x + (@brush.height * Math.sin(rotation))
-    y2 = y + (@brush.height * Math.cos(rotation))
+    x2 = x + (@tip.height * Math.sin(rotation))
+    y2 = y + (@tip.height * Math.cos(rotation))
     @context.lineTo(x,y)
     @context.lineTo(x2, y2)
 
@@ -37,7 +38,7 @@ class window.Draw
 
 
 
-  @stroke: (x,y,rotation)->
+  stroke: (x,y,rotation)->
     unless @hasPreviousPlace()
       @place(x,y,rotation)
       return
@@ -46,8 +47,8 @@ class window.Draw
     @context.moveTo(@lastPlace.x2, @lastPlace.y2)
     @context.lineTo(@lastPlace.x1, @lastPlace.y1)
 
-    x2 = x + (@brush.height * Math.sin(rotation))
-    y2 = y + (@brush.height * Math.cos(rotation))
+    x2 = x + (@tip.height * Math.sin(rotation))
+    y2 = y + (@tip.height * Math.cos(rotation))
     @context.lineTo(x,y)
     @context.lineTo(x2, y2)
 

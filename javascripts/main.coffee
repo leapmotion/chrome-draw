@@ -7,6 +7,8 @@ controller
   .connect()
   .use('riggedHand', {})
   .on 'hand', (hand)->
+
+    # set up rigged hand:
     handMesh = hand.data('riggedHand.mesh')
 
     screenPosition = handMesh.screenPosition(
@@ -14,19 +16,21 @@ controller
       controller.plugins.riggedHand.camera
     )
 
-    Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll())
+
+    # set up pen
+    pen = hand.data('pen')
+
+    unless pen
+      pen = hand.data('pen', new Pen(context: canvas.getContext('2d')))
+
+
+    pen.stroke(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll())
 
 
 
 
 canvas = document.getElementById("canvas")
-#canvas.width(($(window).width()).height($(window).height());
+# prevent up-scale
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
-
-Draw.context = canvas.getContext("2d")
-
-Draw.place(100,100, 0 * TO_RAD)
-Draw.place(110,100, 10 * TO_RAD)
-Draw.stroke(260,100, -5 * TO_RAD)
