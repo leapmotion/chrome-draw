@@ -7,7 +7,6 @@ controller
   .connect()
   .use('riggedHand', {})
   .on 'hand', (hand)->
-    console.log('h')
     handMesh = hand.data('riggedHand.mesh')
 
     screenPosition = handMesh.screenPosition(
@@ -15,7 +14,7 @@ controller
       controller.plugins.riggedHand.camera
     )
 
-    Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, 0)
+    Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll())
 
 
 

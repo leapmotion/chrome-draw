@@ -42,7 +42,6 @@ class window.Draw
       @place(x,y,rotation)
       return
 
-    console.log 'connect'
     @context.beginPath()
     @context.moveTo(@lastPlace.x2, @lastPlace.y2)
     @context.lineTo(@lastPlace.x1, @lastPlace.y1)

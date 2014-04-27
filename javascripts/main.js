@@ -41,7 +41,6 @@
         this.place(x, y, rotation);
         return;
       }
-      console.log('connect');
       this.context.beginPath();
       this.context.moveTo(this.lastPlace.x2, this.lastPlace.y2);
       this.context.lineTo(this.lastPlace.x1, this.lastPlace.y1);
@@ -74,10 +73,9 @@
 
   controller.connect().use('riggedHand', {}).on('hand', function(hand) {
     var handMesh, screenPosition;
-    console.log('h');
     handMesh = hand.data('riggedHand.mesh');
     screenPosition = handMesh.screenPosition(hand.indexFinger.tipPosition, controller.plugins.riggedHand.camera);
-    return Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, 0);
+    return Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll());
   });
 
   canvas = document.getElementById("canvas");
