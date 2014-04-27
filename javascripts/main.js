@@ -6,7 +6,7 @@
 
     Draw.brush = {
       width: 10,
-      height: 400
+      height: 40
     };
 
     Draw.lastPlace = {
@@ -14,6 +14,10 @@
       y1: null,
       x2: null,
       y2: null
+    };
+
+    Draw.hasPreviousPlace = function() {
+      return this.lastPlace.x1 && this.lastPlace.x2 && this.lastPlace.y1 && this.lastPlace.y2;
     };
 
     Draw.place = function(x, y, rotation) {
@@ -33,6 +37,10 @@
 
     Draw.stroke = function(x, y, rotation) {
       var x2, y2;
+      if (!this.hasPreviousPlace()) {
+        this.place(x, y, rotation);
+        return;
+      }
       console.log('connect');
       this.context.beginPath();
       this.context.moveTo(this.lastPlace.x2, this.lastPlace.y2);
@@ -65,7 +73,11 @@
   window.controller = new Leap.Controller;
 
   controller.connect().use('riggedHand', {}).on('hand', function(hand) {
-    return console.log('h');
+    var handMesh, screenPosition;
+    console.log('h');
+    handMesh = hand.data('riggedHand.mesh');
+    screenPosition = handMesh.screenPosition(hand.indexFinger.tipPosition, controller.plugins.riggedHand.camera);
+    return Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, 0);
   });
 
   canvas = document.getElementById("canvas");

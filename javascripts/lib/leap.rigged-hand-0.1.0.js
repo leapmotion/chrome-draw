@@ -339,6 +339,7 @@ var _sortBy = function (obj, iterator, context) {
         });
       }
       handMesh.screenPosition = function(position, camera) {
+        console.assert(camera instanceof THREE.Camera, "screenPosition expects camera, got", camera);
         var screenPosition;
         if (!camera) {
           throw 'No camera provided';

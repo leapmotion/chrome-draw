@@ -6,7 +6,7 @@ class window.Draw
   # a rectangle
   @brush: {
     width: 10
-    height: 400
+    height: 40
   }
 
   @lastPlace: {
@@ -15,6 +15,9 @@ class window.Draw
     x2: null,
     y2: null
   }
+
+  @hasPreviousPlace: ->
+    @lastPlace.x1 && @lastPlace.x2 && @lastPlace.y1 && @lastPlace.y2
 
   # expects rotation in radians
   @place: (x, y, rotation)->
@@ -35,6 +38,10 @@ class window.Draw
 
 
   @stroke: (x,y,rotation)->
+    unless @hasPreviousPlace()
+      @place(x,y,rotation)
+      return
+
     console.log 'connect'
     @context.beginPath()
     @context.moveTo(@lastPlace.x2, @lastPlace.y2)
@@ -52,3 +59,4 @@ class window.Draw
     @lastPlace.y1 = y
     @lastPlace.x2 = x2
     @lastPlace.y2 = y2
+

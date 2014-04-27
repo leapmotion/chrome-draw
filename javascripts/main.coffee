@@ -8,6 +8,16 @@ controller
   .use('riggedHand', {})
   .on 'hand', (hand)->
     console.log('h')
+    handMesh = hand.data('riggedHand.mesh')
+
+    screenPosition = handMesh.screenPosition(
+      hand.indexFinger.tipPosition,
+      controller.plugins.riggedHand.camera
+    )
+
+    Draw.stroke(screenPosition.x, window.innerHeight - screenPosition.y, 0)
+
+
 
 
 canvas = document.getElementById("canvas")
