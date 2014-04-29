@@ -1,5 +1,5 @@
 /*                    
- * LeapJS Rigged Hand - v0.1.0 - 2014-04-24                    
+ * LeapJS Rigged Hand - v0.1.1 - 2014-04-28                    
  * http://github.com/leapmotion/leapjs-rigged-hand/                    
  *                    
  * Copyright 2014 LeapMotion, Inc                    
@@ -20,6 +20,65 @@
 
 ;(function( window, undefined ){
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+var Detector = {
+
+	canvas: !! window.CanvasRenderingContext2D,
+	webgl: ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )(),
+	workers: !! window.Worker,
+	fileapi: window.File && window.FileReader && window.FileList && window.Blob,
+
+	getWebGLErrorMessage: function () {
+
+		var element = document.createElement( 'div' );
+		element.id = 'webgl-error-message';
+		element.style.fontFamily = 'monospace';
+		element.style.fontSize = '13px';
+		element.style.fontWeight = 'normal';
+		element.style.textAlign = 'center';
+		element.style.background = '#fff';
+		element.style.color = '#000';
+		element.style.padding = '1.5em';
+		element.style.width = '400px';
+		element.style.margin = '5em auto 0';
+
+		if ( ! this.webgl ) {
+
+			element.innerHTML = window.WebGLRenderingContext ? [
+				'Your graphics card does not seem to support <a href="http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation" style="color:#000">WebGL</a>.<br />',
+				'Find out how to get it <a href="http://get.webgl.org/" style="color:#000">here</a>.'
+			].join( '\n' ) : [
+				'Your browser does not seem to support <a href="http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation" style="color:#000">WebGL</a>.<br/>',
+				'Find out how to get it <a href="http://get.webgl.org/" style="color:#000">here</a>.'
+			].join( '\n' );
+
+		}
+
+		return element;
+
+	},
+
+	addGetWebGLMessage: function ( parameters ) {
+
+		var parent, id, element;
+
+		parameters = parameters || {};
+
+		parent = parameters.parent !== undefined ? parameters.parent : document.body;
+		id = parameters.id !== undefined ? parameters.id : 'oldie';
+
+		element = Detector.getWebGLErrorMessage();
+		element.id = id;
+
+		parent.appendChild( element );
+
+	}
+
+};
 var rigs = {};
 rigs.left = {
 
@@ -273,7 +332,7 @@ var _sortBy = function (obj, iterator, context) {
   };
 
   Leap.plugin('riggedHand', function(scope) {
-    var addMesh, basicDotMesh, createMesh, dots, projector, removeMesh, zeroVector;
+    var addMesh, basicDotMesh, controller, createMesh, dots, projector, removeMesh, zeroVector;
     if (scope == null) {
       scope = {};
     }
@@ -286,6 +345,17 @@ var _sortBy = function (obj, iterator, context) {
     scope.scale || (scope.scale = 1);
     scope.positionScale || (scope.positionScale = 1);
     scope.initScene = initScene;
+    controller = this;
+    scope.Detector = Detector;
+    if (scope['checkWebGL'] === void 0) {
+      scope.checkWebGL = !scope.parent;
+    }
+    if (scope.checkWebGL) {
+      if (!scope.Detector.webgl) {
+        scope.Detector.addGetWebGLMessage();
+        return;
+      }
+    }
     if (!scope.parent) {
       scope.initScene(document.body);
       scope.parent = scope.scene;
@@ -339,11 +409,8 @@ var _sortBy = function (obj, iterator, context) {
         });
       }
       handMesh.screenPosition = function(position, camera) {
-        console.assert(camera instanceof THREE.Camera, "screenPosition expects camera, got", camera);
         var screenPosition;
-        if (!camera) {
-          throw 'No camera provided';
-        }
+        console.assert(camera instanceof THREE.Camera, "screenPosition expects camera, got", camera);
         screenPosition = new THREE.Vector3();
         if (position instanceof THREE.Vector3) {
           screenPosition.fromLeap(position.toArray(), this.leapScale);

@@ -1,4 +1,21 @@
 (function() {
+  window.Controls = (function() {
+    function Controls() {}
+
+    Controls.initialize = function() {
+      return $("#color").spectrum({
+        flat: true,
+        showButtons: false
+      });
+    };
+
+    return Controls;
+
+  })();
+
+}).call(this);
+
+(function() {
   window.Pen = (function() {
     function Pen(options) {
       if (options == null) {
@@ -84,13 +101,7 @@
 }).call(this);
 
 (function() {
-  var context, cursorContext, getPen, setupContext;
-
-  window.TO_RAD = Math.PI / 180;
-
-  window.TO_DEG = 1 / TO_RAD;
-
-  setupContext = function(id) {
+  window.setupContext = function(id) {
     var canvas;
     canvas = document.getElementById(id);
     canvas.width = window.innerWidth;
@@ -98,25 +109,7 @@
     return canvas.getContext('2d');
   };
 
-  context = setupContext('canvas');
-
-  cursorContext = setupContext('cursorCanvas');
-
-  window.controller = new Leap.Controller;
-
-  controller.connect().use('riggedHand', {}).on('frame', function(frame) {
-    return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  }).on('hand', function(hand) {
-    var pen;
-    pen = getPen(hand);
-    if (hand.pinchStrength < 0.5) {
-      return pen.updateCursor();
-    } else {
-      return pen.stroke();
-    }
-  });
-
-  getPen = function(hand) {
+  window.getPen = function(hand) {
     var angle, handMesh, pen, screenPosition;
     handMesh = hand.data('riggedHand.mesh');
     screenPosition = handMesh.screenPosition(hand.indexFinger.tipPosition, controller.plugins.riggedHand.camera);
@@ -130,10 +123,37 @@
     angle = Leap.vec3.create();
     Leap.vec3.sub(angle, hand.indexFinger.tipPosition, hand.thumb.tipPosition);
     Leap.vec3.normalize(angle, angle);
-    document.getElementById('out').innerHTML = hand.pinchStrength;
+    document.getElementById('out').innerHTML = hand.active;
     pen.setPosition(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll());
     pen.setColor("rgba(255,0,0," + hand.pinchStrength + ")");
     return pen;
   };
+
+}).call(this);
+
+(function() {
+  window.TO_RAD = Math.PI / 180;
+
+  window.TO_DEG = 1 / TO_RAD;
+
+  window.context = setupContext('canvas');
+
+  window.cursorContext = setupContext('cursorCanvas');
+
+  window.controller = new Leap.Controller;
+
+  controller.connect().use('riggedHand', {}).use('handActive').on('frame', function(frame) {
+    return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }).on('hand', function(hand) {
+    var pen;
+    pen = getPen(hand);
+    if (hand.pinchStrength < 0.5) {
+      return pen.updateCursor();
+    } else {
+      return pen.stroke();
+    }
+  });
+
+  Controls.initialize();
 
 }).call(this);
