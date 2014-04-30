@@ -4,6 +4,8 @@
 
     Canvas.history = [];
 
+    Canvas.swipedAt = null;
+
     Canvas.saveState = function() {
       return this.history.push(this.context.getImageData(0, 0, window.innerWidth, window.innerHeight));
     };
@@ -13,6 +15,29 @@
         return;
       }
       return this.context.putImageData(this.history.pop(), 0, 0);
+    };
+
+    Canvas.reset = function() {
+      if (!(this.history.length > 0)) {
+        return;
+      }
+      this.context.putImageData(this.history[0], 0, 0);
+      return this.history = [];
+    };
+
+    Canvas.handleSwipe = function(swipe) {
+      var swipedAt;
+      swipedAt = (new Date).getTime();
+      if (this.swipedAt && this.swipedAt > (swipedAt - 1000)) {
+        return;
+      }
+      if (swipe.direction[0] > 0 || (Math.abs(swipe.direction[0]) < (Math.abs(swipe.direction[1]) + Math.abs(swipe.direction[2])))) {
+        console.log('incorrect direction, no swipe');
+        return;
+      }
+      this.swipedAt = swipedAt;
+      console.log('swipe', swipe.direction);
+      return this.reset();
     };
 
     return Canvas;
@@ -155,10 +180,17 @@
             saturation: 0.5
           };
         } else {
-          return {
-            hue: hue,
-            saturation: Math.max(leapHand.data('handSplay.splay') - 0.5, 0)
-          };
+          if ((boneMesh.name.indexOf('Finger_0') === 0) || (boneMesh.name.indexOf('Finger_1') === 0)) {
+            return {
+              hue: hue,
+              saturation: 0.5
+            };
+          } else {
+            return {
+              hue: 0,
+              saturation: 0.1
+            };
+          }
         }
       } else {
         return {
@@ -168,7 +200,8 @@
       }
     }
   }).use('handSplay', {
-    splayThreshold: 0.75
+    splayThreshold: 0.80,
+    requiredFingers: 5
   }).use('relativeMotion').on('frame', function(frame) {
     return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }).on('hand', function(hand) {
@@ -179,6 +212,11 @@
     } else {
       return pen.stroke();
     }
+  }).on('gesture', function(gesture) {
+    if (!(gesture.type === 'swipe' && gesture.state === 'stop')) {
+      return;
+    }
+    return Canvas.handleSwipe(gesture);
   });
 
   Controls.initialize(controller);

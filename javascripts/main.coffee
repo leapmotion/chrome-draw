@@ -13,7 +13,6 @@ controller
     boneColors: (boneMesh, leapHand)->
       # todo: better pen default handling, better saturation default.
 
-#      console.log('splay', leapHand.data('handSplay.splay'))
       splay = leapHand.data('handSplay.splay');
       document.getElementById('out2').innerHTML = splay;
 
@@ -26,10 +25,17 @@ controller
             saturation: 0.5
           }
         else
-          {
-            hue: hue
-            saturation: Math.max(leapHand.data('handSplay.splay') - 0.5, 0)
-          }
+          if (boneMesh.name.indexOf('Finger_0') == 0) || (boneMesh.name.indexOf('Finger_1') == 0)
+            {
+              hue: hue
+  #            saturation: Math.max(leapHand.data('handSplay.splay') - 0.5, 0)
+              saturation: 0.5
+            }
+          else
+            {
+            hue: 0
+            saturation: 0.1
+            }
       else
         {
           hue: 0
@@ -40,7 +46,8 @@ controller
 
   })
   .use('handSplay', {
-    splayThreshold: 0.75
+    splayThreshold: 0.80
+    requiredFingers: 5
   })
   .use('relativeMotion')
   .on 'frame', (frame) ->
@@ -58,6 +65,10 @@ controller
 #  .on 'gesture', (circle)->
 #    if circle.state == 'stop'
 #      console.log 'circle', circle.state, circle.duration / 1000
+  .on 'gesture', (gesture)->
+    return unless gesture.type == 'swipe' && gesture.state == 'stop'
+    Canvas.handleSwipe(gesture)
+#    console.log 'swipe', gesture.state
 
 
 Controls.initialize(controller)
