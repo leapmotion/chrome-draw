@@ -143,7 +143,7 @@
     angle = Leap.vec3.create();
     Leap.vec3.sub(angle, hand.indexFinger.tipPosition, hand.thumb.tipPosition);
     Leap.vec3.normalize(angle, angle);
-    document.getElementById('out').innerHTML = hand.data('handSplay.splayed');
+    document.getElementById('out').innerHTML = "Splayed: " + (hand.data('handSplay.splayed'));
     pen.setPosition(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll());
     pen.setColor("hsla(" + pen.hue + ", 50%, 45%, " + hand.pinchStrength + ")");
     return pen;
@@ -170,7 +170,9 @@
     boneColors: function(boneMesh, leapHand) {
       var hue, pen, splay;
       splay = leapHand.data('handSplay.splay');
-      document.getElementById('out2').innerHTML = splay;
+      if (splay) {
+        document.getElementById('out2').innerHTML = "Splay: " + (splay.toPrecision(2));
+      }
       pen = leapHand.data('pen');
       if (pen) {
         hue = pen.hue / 360;
@@ -200,7 +202,7 @@
       }
     }
   }).use('handSplay', {
-    splayThreshold: 0.80,
+    splayThreshold: 0.85,
     requiredFingers: 5
   }).use('relativeMotion').on('frame', function(frame) {
     return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);

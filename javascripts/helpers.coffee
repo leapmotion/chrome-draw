@@ -35,7 +35,7 @@ window.getPen = (hand)->
 
 #  document.getElementById('out').innerHTML = (Math.tan(angle[0], angle[1]) * TO_DEG).toPrecision(2) + '&#176;'
 #  document.getElementById('out').innerHTML = hand.pinchStrength
-  document.getElementById('out').innerHTML = hand.data('handSplay.splayed')
+  document.getElementById('out').innerHTML = "Splayed: #{hand.data('handSplay.splayed')}"
 
 
   pen.setPosition(

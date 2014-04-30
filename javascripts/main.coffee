@@ -14,7 +14,8 @@ controller
       # todo: better pen default handling, better saturation default.
 
       splay = leapHand.data('handSplay.splay');
-      document.getElementById('out2').innerHTML = splay;
+      if splay
+        document.getElementById('out2').innerHTML = "Splay: #{splay.toPrecision(2)}";
 
       pen = leapHand.data('pen')
       if pen
@@ -46,7 +47,7 @@ controller
 
   })
   .use('handSplay', {
-    splayThreshold: 0.80
+    splayThreshold: 0.85
     requiredFingers: 5
   })
   .use('relativeMotion')
