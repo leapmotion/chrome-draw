@@ -24,6 +24,7 @@
     position: fixed;
     top: 0;
     left: 0;
+    pointer-events: none;
   }
   #cursorCanvas{
     z-index: 1;
@@ -36,6 +37,8 @@
   }
 </style>
 <body>
+
+<button onclick="window.Canvas.restoreState();">Undo</button>
 
 <div id="out"></div>
 

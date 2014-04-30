@@ -4,8 +4,9 @@ class window.Pen
   constructor: (options = {})->
     @context = options.context
     @cursorContext = options.cursorContext
-    @previewMode = false
     @contexts = [options.context, options.cursorContext]
+    @drawing = false
+
 
     # a rectangle
     @tip = {
@@ -55,10 +56,12 @@ class window.Pen
 
 
   stroke: ->
-    @previewMode = false
     unless @hasPreviousPlace()
       @place(@context)
       return
+
+    window.Canvas.saveState() unless @drawing
+    @drawing = true
 
     @context.beginPath()
     @context.moveTo(@lastPlace.x2, @lastPlace.y2)
@@ -78,8 +81,12 @@ class window.Pen
     @lastPlace.y2 = y2
 
   updateCursor: ->
-    @setOpacity(1)
+    @drawing = false
+#    @setOpacity(1)
     @place(@cursorContext)
+
+
+
 
 
 

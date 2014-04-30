@@ -3,6 +3,7 @@ window.TO_DEG = 1 / TO_RAD;
 
 window.context       = setupContext('canvas')
 window.cursorContext = setupContext('cursorCanvas')
+window.Canvas.context = window.context
 
 # leap-enable the drawing
 (window.controller = new Leap.Controller)
