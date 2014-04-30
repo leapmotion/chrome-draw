@@ -7,6 +7,8 @@ class window.Pen
     @contexts = [options.context, options.cursorContext]
     @drawing = false
 
+    @hue = 170
+
 
     # a rectangle
     @tip = {
@@ -84,6 +86,11 @@ class window.Pen
     @drawing = false
 #    @setOpacity(1)
     @place(@cursorContext)
+
+
+  changeHue: (amount)->
+    @hue += ( amount )
+    @hue = @hue % 360
 
 
 

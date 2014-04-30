@@ -2,7 +2,7 @@ class window.Controls
 
   # can be one of color, hue, or null
   # later, could add senstivity
-  mode = null
+  mode = 'hue'
   hsl = []
 
 
@@ -26,12 +26,13 @@ class window.Controls
 
 
   @setupEvents = (controller)->
-    return
 
     controller.on 'handSplay', (hand)->
       console.log 'hand splay'
       hand.recalibrate()
 
+    controller.on 'handUnsplay', (hand)->
+      console.log 'hand unsplay'
 
     controller.on 'hand', (hand)=>
       return unless hand.data('handSplay.splayed')
@@ -39,13 +40,18 @@ class window.Controls
       relativeScreenPosition = @screenPosition(hand.relativePosition());
 
       # early-exit if no change
-      if relativeScreenPosition.left == previousRelativeScreenPosition.left &&
+      if previousRelativeScreenPosition &&
+        relativeScreenPosition.left == previousRelativeScreenPosition.left &&
                 relativeScreenPosition.top == previousRelativeScreenPosition.top
         return
 
       previousRelativeScreenPosition = relativeScreenPosition
 
-      $("#color").spectrum
+      hand.data('pen').changeHue(relativeScreenPosition.top)
+      hand.recalibrate()
+
+
+#      $("#color").spectrum
 
   # this method creates an object every frame, which isin't great
   @screenPosition = (vec3)->

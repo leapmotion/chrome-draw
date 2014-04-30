@@ -27,7 +27,7 @@
 
     function Controls() {}
 
-    mode = null;
+    mode = 'hue';
 
     hsl = [];
 
@@ -49,10 +49,12 @@
     };
 
     Controls.setupEvents = function(controller) {
-      return;
       controller.on('handSplay', function(hand) {
         console.log('hand splay');
         return hand.recalibrate();
+      });
+      controller.on('handUnsplay', function(hand) {
+        return console.log('hand unsplay');
       });
       return controller.on('hand', (function(_this) {
         return function(hand) {
@@ -61,11 +63,12 @@
             return;
           }
           relativeScreenPosition = _this.screenPosition(hand.relativePosition());
-          if (relativeScreenPosition.left === previousRelativeScreenPosition.left && relativeScreenPosition.top === previousRelativeScreenPosition.top) {
+          if (previousRelativeScreenPosition && relativeScreenPosition.left === previousRelativeScreenPosition.left && relativeScreenPosition.top === previousRelativeScreenPosition.top) {
             return;
           }
           previousRelativeScreenPosition = relativeScreenPosition;
-          return $("#color").spectrum;
+          hand.data('pen').changeHue(relativeScreenPosition.top);
+          return hand.recalibrate();
         };
       })(this));
     };
@@ -117,7 +120,7 @@
     Leap.vec3.normalize(angle, angle);
     document.getElementById('out').innerHTML = hand.data('handSplay.splayed');
     pen.setPosition(screenPosition.x, window.innerHeight - screenPosition.y, hand.roll());
-    pen.setColor("rgba(255,0,0," + hand.pinchStrength + ")");
+    pen.setColor("hsla(" + pen.hue + ", 50%, 45%, " + hand.pinchStrength + ")");
     return pen;
   };
 
@@ -134,9 +137,39 @@
 
   window.Canvas.context = window.context;
 
-  window.controller = new Leap.Controller;
+  window.controller = new Leap.Controller({
+    enableGestures: true
+  });
 
-  controller.connect().use('riggedHand', {}).use('handSplay').use('relativeMotion').on('frame', function(frame) {
+  controller.connect().use('riggedHand', {
+    boneColors: function(boneMesh, leapHand) {
+      var hue, pen, splay;
+      splay = leapHand.data('handSplay.splay');
+      document.getElementById('out2').innerHTML = splay;
+      pen = leapHand.data('pen');
+      if (pen) {
+        hue = pen.hue / 360;
+        if (leapHand.data('handSplay.splayed')) {
+          return {
+            hue: hue,
+            saturation: 0.5
+          };
+        } else {
+          return {
+            hue: hue,
+            saturation: Math.max(leapHand.data('handSplay.splay') - 0.5, 0)
+          };
+        }
+      } else {
+        return {
+          hue: 0,
+          saturation: 0.1
+        };
+      }
+    }
+  }).use('handSplay', {
+    splayThreshold: 0.75
+  }).use('relativeMotion').on('frame', function(frame) {
     return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }).on('hand', function(hand) {
     var pen;
@@ -162,6 +195,7 @@
       this.cursorContext = options.cursorContext;
       this.contexts = [options.context, options.cursorContext];
       this.drawing = false;
+      this.hue = 170;
       this.tip = {
         height: 10
       };
@@ -240,6 +274,11 @@
     Pen.prototype.updateCursor = function() {
       this.drawing = false;
       return this.place(this.cursorContext);
+    };
+
+    Pen.prototype.changeHue = function(amount) {
+      this.hue += amount;
+      return this.hue = this.hue % 360;
     };
 
     return Pen;

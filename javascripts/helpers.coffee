@@ -44,7 +44,8 @@ window.getPen = (hand)->
     hand.roll()
   )
 
-  pen.setColor("rgba(255,0,0,#{hand.pinchStrength})")
+#  pen.setColor("rgba(255,0,0,#{hand.pinchStrength})")
+  pen.setColor("hsla(#{pen.hue}, 50%, 45%, #{hand.pinchStrength})")
 
   return pen
 
