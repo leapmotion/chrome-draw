@@ -1,4 +1,4 @@
-# simulate caligraphy
+# simulate calligraphy
 class window.Pen
 
   constructor: (options = {})->
@@ -9,8 +9,7 @@ class window.Pen
 
     # a rectangle
     @tip = {
-      width: 10
-      height: 40
+      height: 10
     }
 
     @lastPlace = {
@@ -28,6 +27,12 @@ class window.Pen
   setColor: (colorString)->
     @contexts.map (context)->
       context.strokeStyle = context.fillStyle = colorString
+
+  setOpacity: (fraction)->
+    colorString = context.fillStyle
+    colorString = colorString.split(',')
+    colorString[3] = "#{fraction})"
+    @setColor colorString.join(',')
 
   hasPreviousPlace: ->
     @lastPlace.x1 && @lastPlace.x2 && @lastPlace.y1 && @lastPlace.y2
@@ -73,6 +78,7 @@ class window.Pen
     @lastPlace.y2 = y2
 
   updateCursor: ->
+    @setOpacity(1)
     @place(@cursorContext)
 
 
