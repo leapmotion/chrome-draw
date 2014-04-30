@@ -9,7 +9,8 @@ window.cursorContext = setupContext('cursorCanvas')
 controller
   .connect()
   .use('riggedHand', {})
-  .use('handActive')
+  .use('handSplay')
+  .use('relativeMotion')
   .on 'frame', (frame) ->
     # remove mouse cursors from previous frame
     cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -23,6 +24,6 @@ controller
       pen.stroke()
 
 
-Controls.initialize()
+Controls.initialize(controller)
 
 

@@ -1,12 +1,66 @@
 (function() {
   window.Controls = (function() {
+    var hsl, mode;
+
     function Controls() {}
 
-    Controls.initialize = function() {
-      return $("#color").spectrum({
+    mode = null;
+
+    hsl = [];
+
+    Controls.initialize = function(controller) {
+      this.setupEvents(controller);
+      $("#color").spectrum({
         flat: true,
         showButtons: false
       });
+      $('.sp-color').on('click', function() {
+        $(this).addClass('active');
+        return mode = 'color';
+      });
+      $('.sp-hue').on('click', function() {
+        $(this).addClass('active');
+        return mode = 'hue';
+      });
+      return $(document.body).on('click', function() {});
+    };
+
+    Controls.setupEvents = function(controller) {
+      return;
+      controller.on('handSplay', function(hand) {
+        console.log('hand splay');
+        return hand.recalibrate();
+      });
+      return controller.on('hand', (function(_this) {
+        return function(hand) {
+          var previousRelativeScreenPosition, relativeScreenPosition;
+          if (!hand.data('handSplay.splayed')) {
+            return;
+          }
+          relativeScreenPosition = _this.screenPosition(hand.relativePosition());
+          if (relativeScreenPosition.left === previousRelativeScreenPosition.left && relativeScreenPosition.top === previousRelativeScreenPosition.top) {
+            return;
+          }
+          previousRelativeScreenPosition = relativeScreenPosition;
+          return $("#color").spectrum;
+        };
+      })(this));
+    };
+
+    Controls.screenPosition = function(vec3) {
+      var factor;
+      factor = 1;
+      if (mode === 'hue') {
+        return {
+          left: 0,
+          top: vec3[1] * factor
+        };
+      } else if (mode === 'color') {
+        return {
+          left: vec3[1] * factor,
+          top: vec3[1] * factor
+        };
+      }
     };
 
     return Controls;
@@ -26,8 +80,7 @@
       this.previewMode = false;
       this.contexts = [options.context, options.cursorContext];
       this.tip = {
-        width: 10,
-        height: 40
+        height: 10
       };
       this.lastPlace = {
         x1: null,
@@ -47,6 +100,14 @@
       return this.contexts.map(function(context) {
         return context.strokeStyle = context.fillStyle = colorString;
       });
+    };
+
+    Pen.prototype.setOpacity = function(fraction) {
+      var colorString;
+      colorString = context.fillStyle;
+      colorString = colorString.split(',');
+      colorString[3] = "" + fraction + ")";
+      return this.setColor(colorString.join(','));
     };
 
     Pen.prototype.hasPreviousPlace = function() {
@@ -91,6 +152,7 @@
     };
 
     Pen.prototype.updateCursor = function() {
+      this.setOpacity(1);
       return this.place(this.cursorContext);
     };
 
@@ -142,7 +204,7 @@
 
   window.controller = new Leap.Controller;
 
-  controller.connect().use('riggedHand', {}).use('handActive').on('frame', function(frame) {
+  controller.connect().use('riggedHand', {}).use('handSplay').use('relativeMotion').on('frame', function(frame) {
     return cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }).on('hand', function(hand) {
     var pen;
@@ -154,6 +216,6 @@
     }
   });
 
-  Controls.initialize();
+  Controls.initialize(controller);
 
 }).call(this);

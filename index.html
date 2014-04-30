@@ -6,7 +6,8 @@
   <script src="javascripts/lib/leap-0.6.0-beta2-loop-hand.js"></script>
   <script src="javascripts/lib/leap-plugins-0.1.4-data-defaults.js"></script>
   <script src="javascripts/lib/leap.rigged-hand-0.1.1.js"></script>
-  <script src="javascripts/lib/leap.hand-active.js"></script>
+  <script src="javascripts/lib/leap.hand-splay.js"></script>
+  <script src="javascripts/leap.relative-motion.js"></script>
 
   <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/s.cdpn.io/109794/spectrum.css' />
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -29,6 +30,9 @@
   }
   .sp-container{
     float: right;
+  }
+  .sp-color.active, .sp-hue.active{
+    box-shadow: 0px 0px 8px black inset;
   }
 </style>
 <body>
