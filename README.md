@@ -33,6 +33,7 @@ As well as transpiling the coffeescript in to `main.js`, this will also run a li
  - Build in to chrome extension, for use on any page
  - Add "new canvas" and "take screenshot" buttons
  - Add share buttons
+ - Break out swipe-timeout (and direction, end-event) in to their own wrapper plugin
 
 
 ## Components
