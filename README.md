@@ -37,6 +37,7 @@ As well as transpiling the coffeescript in to `main.js`, this will also run a li
 
 ## Components
 
+ - Probably the most interesting part of the app is how the pen is positioned: [javascripts/helpers.coffee#L41-L45](https://github.com/leapmotion/chrome-draw/blob/master/javascripts/helpers.coffee#L41-L45)
  - The [Rigged Hand](https://github.com/leapmotion/leapjs-rigged-hand) - 3d hand on screen
  - [Leapjs-playback](https://github.com/leapmotion/leapjs-playback) - plays back pre-recorded motion
  - *leap.relative-motion* This beta plugin allows motion relative to the position of the hand when last recalibrated

@@ -10,7 +10,6 @@ class window.Pen
     @hue = 170
 
 
-    # a rectangle
     @tip = {
       height: 10
     }
