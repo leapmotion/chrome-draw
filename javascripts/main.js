@@ -166,7 +166,10 @@
     enableGestures: true
   });
 
-  controller.connect().use('riggedHand', {
+  controller.connect().use('playback', {
+    recording: 'recordings/Hello-110fps.json.lz',
+    pauseOnHand: true
+  }).use('riggedHand', {
     boneColors: function(boneMesh, leapHand) {
       var hue, pen, splay;
       splay = leapHand.data('handSplay.splay');

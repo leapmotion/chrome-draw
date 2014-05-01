@@ -9,6 +9,11 @@ window.Canvas.context = window.context
 (window.controller = new Leap.Controller({enableGestures: true}))
 controller
   .connect()
+  .use('playback', {
+    recording: 'recordings/Hello-110fps.json.lz',
+    pauseOnHand: true
+
+  })
   .use('riggedHand', {
     boneColors: (boneMesh, leapHand)->
       # todo: better pen default handling, better saturation default.
