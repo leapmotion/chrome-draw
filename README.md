@@ -34,6 +34,9 @@ As well as transpiling the coffeescript in to `main.js`, this will also run a li
  - Add "new canvas" and "take screenshot" buttons
  - Add share buttons
  - Break out swipe-timeout (and direction, end-event) in to their own wrapper plugin
+ - Add field of view calculations (plugin) and a feature with the rigged hand to allow coloring bounded by a plane.  Use to darken the hand on the edge of the field of view.
+ - Use radial coordinate system to detect left and right flicks of the hand from the wrist, use to switch h/s/l setting modes.
+ - Add grab support, to allow moving the background with one hand, while drawing with the other.
 
 
 ## Components
