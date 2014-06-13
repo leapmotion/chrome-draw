@@ -10,12 +10,13 @@ Requires WebGL for display, Leap Skeletal Beta for interaction:
 
 ## Building
 
-It is currently implemented in coffee script.  To compile your own changes, make sure you have grunt installed
-(`npm install grunt`), and then simply run
+It is currently implemented in coffee script.  Simply run
 
-```bash
-> grunt watch
-```
+> npm install
+
+> grunt dev
+
+And then head to http://localhost:8000
 
 As well as transpiling the coffeescript in to `main.js`, this will also run a livereload server.  With the right
 [chrome extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en), the page will reload for you when files are changed.
